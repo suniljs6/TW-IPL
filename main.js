@@ -1,3 +1,19 @@
+const app = {
+    init: function() {
+        document.querySelectorAll('.change-team').forEach((link) => {
+            link.addEventListener('click',app.nav);
+        })
+        history.replaceState({},'index.html','#');
+        window.addEventListener('popstate',app.poppin);
+    },
+    nav: function(ev) {
+        ev.preventDefault();
+        let currentPage = ev.target.getAttribute('data-target');
+        history.pushState({}, currentPage, `${currentPage}`);
+        viewTeam(currentPage);
+    }
+}
+document.addEventListener('DOMContentLoaded', app.init);
 var teamNames = {
     "chennai-super-kings": {
         id: "csk",
@@ -65,6 +81,13 @@ function populateTeamData(){
     
 }
 
+function getTeamID(id) {
+    console.log(id);
+    return Object.keys(teamNames).find(key => teamNames[key].id === id);
+}
+
 function viewTeam(team) {
-    
+    fetchTeamData("https://ipl-t20.herokuapp.com/teams/"+getTeamID(team)).then((players) => {
+        console.log(players);
+    })
 }
