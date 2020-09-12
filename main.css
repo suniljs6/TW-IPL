@@ -178,3 +178,6 @@ a {
     width: 100%;
     justify-content: center;
 }
+.team-detailed-view {
+    display: none;
+}

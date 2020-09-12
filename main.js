@@ -3,7 +3,7 @@ const app = {
         document.querySelectorAll('.change-team').forEach((link) => {
             link.addEventListener('click',app.nav);
         })
-        history.replaceState({},'index.html','#');
+        history.replaceState({},'index.html','');
         window.addEventListener('popstate',app.poppin);
     },
     nav: function(ev) {
@@ -11,6 +11,10 @@ const app = {
         let currentPage = ev.target.getAttribute('data-target');
         history.pushState({}, currentPage, `${currentPage}`);
         viewTeam(currentPage);
+    },
+    poppin: function(ev){
+        console.log(location.hash, 'popstate event');
+        let hash = location.hash.replace('#' ,'');
     }
 }
 document.addEventListener('DOMContentLoaded', app.init);
@@ -82,12 +86,23 @@ function populateTeamData(){
 }
 
 function getTeamID(id) {
-    console.log(id);
     return Object.keys(teamNames).find(key => teamNames[key].id === id);
 }
 
+function isCaption(captainId,playerId){
+    return captainId === playerId;
+}
+
+function isWicketKeeper(wicketKeeperId, playerId){
+    return wicketKeeperId === playerId;
+}
+
 function viewTeam(team) {
+    document.getElementById("loader-div").style.display = "flex";
+    document.getElementById("teams-div").style.display = "none";
     fetchTeamData("https://ipl-t20.herokuapp.com/teams/"+getTeamID(team)).then((players) => {
         console.log(players);
+        document.getElementById("loader-div").style.display = "none";
+        document.getElementById("team-detailed-view").style.display = "flex";
     })
 }
