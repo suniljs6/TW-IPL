@@ -1,4 +1,5 @@
 const app = {
+    currentPage: "",
     init: function() {
         document.querySelectorAll('.change-team').forEach((link) => {
             link.addEventListener('click',app.nav);
@@ -8,15 +9,20 @@ const app = {
     },
     nav: function(ev) {
         ev.preventDefault();
-        let currentPage = ev.target.getAttribute('data-target');
-        history.pushState({}, currentPage, `${currentPage}`);
-        viewTeam(currentPage);
+        app.currentPage = ev.target.getAttribute('data-target');
+        history.pushState({}, app.currentPage, `${app.currentPage}`);
+        viewTeam(app.currentPage);
     },
     poppin: function(ev){
         console.log(location.hash, 'popstate event');
+        if (window.location.href.length === window.location.href.search("TW-IPL/")+"TW-IPL/".length) {
+            document.getElementById("teams-div").style.display = "flex";
+            document.getElementById("team-detailed-view").style.display = "none";
+        } else {
+            viewTeam(app.currentPage);
+        }
+        console.log(window.location.href);
         let hash = location.hash.replace('#' ,'');
-        document.getElementById("team-detailed-view").style.display = "none";
-        document.getElementById("teams-div").style.display = "flex";
     }
 }
 document.addEventListener('DOMContentLoaded', app.init);
@@ -97,6 +103,7 @@ async function fetchTeamData(url){
 }
 
 function populateTeamData(){
+    document.getElementById("loader-div").style.display = "flex";
     fetchTeamData("https://ipl-t20.herokuapp.com/teams").then(teams => {
         teams.forEach(team => {
             var toAdd = document.createDocumentFragment();
@@ -125,6 +132,7 @@ function populateTeamData(){
         });
         document.getElementById("loader-div").style.display = "none";
         document.getElementById("teams-div").style.display = "flex";
+        document.getElementById("team-detailed-view").style.display = "none";
     })
     
 }
