@@ -3,13 +3,13 @@ const app = {
         document.querySelectorAll('.change-team').forEach((link) => {
             link.addEventListener('click',app.nav);
         })
-       // history.replaceState({},'index.html','');
+        history.replaceState({},'index.html','');
         window.addEventListener('popstate',app.poppin);
     },
     nav: function(ev) {
         ev.preventDefault();
         let currentPage = ev.target.getAttribute('data-target');
-        //history.pushState({}, currentPage, `${currentPage}`);
+        history.pushState({}, currentPage, `${currentPage}`);
         viewTeam(currentPage);
     },
     poppin: function(ev){
