@@ -15,6 +15,8 @@ const app = {
     poppin: function(ev){
         console.log(location.hash, 'popstate event');
         let hash = location.hash.replace('#' ,'');
+        document.getElementById("team-detailed-view").style.display = "none";
+        document.getElementById("teams-div").style.display = "flex";
     }
 }
 document.addEventListener('DOMContentLoaded', app.init);
