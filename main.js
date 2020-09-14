@@ -16,7 +16,7 @@ const app = {
     nav: function(ev) {
         ev.preventDefault();
         app.currentPage = ev.target.getAttribute('data-target');
-        //history.pushState({}, app.currentPage, `${app.currentPage}`);
+        history.pushState({}, app.currentPage, `${app.currentPage}`);
         viewTeam(app.currentPage);
     },
     poppin: function(ev){
