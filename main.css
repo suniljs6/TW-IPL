@@ -194,6 +194,7 @@ a {
 }
 .team-banner-div {
     display: flex;
+    width: 100%;
 }
 .team-banner-div img {
     height: 90%;
@@ -256,4 +257,98 @@ a {
 }
 .Wickets {
     margin-left: 30%;
+}
+/* 
+  ##Device = Tablets, Ipads (portrait)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .player-card {
+        width: 40% !important;
+    }
+    li {
+        width: 45% !important;
+    }
+
+}
+  
+  /* 
+    ##Device = Tablets, Ipads (landscape)
+    ##Screen = B/w 768px to 1024px
+  */
+  
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .player-card {
+        width: 40% !important;
+    }
+    li {
+        width: 45% !important;
+    }
+}
+/* 
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+    li {
+        width: 48% !important;
+        height: 85% !important;
+    }
+    .player-card {
+        width: 45% !important;
+    }
+    .team-data-div {
+        margin: 0 !important;
+    }
+    .team-data-div h3 {
+        margin: 0 !important;
+    }
+    .team-banner {
+        height: 45% !important;
+    }
+}
+/* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {
+    body {
+        margin: 0 !important;
+    }
+    li {
+        width: 100% !important;
+        height: 54% !important;
+    }
+    .team-banner {
+        height: 55% !important;
+    }
+    .team-banner-div {
+        height: 100% !important;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .team-banner-div img {
+        height: 50% !important;
+        margin-left: 0 !important;
+    }
+    .team-data-div {
+        margin: 0 !important;
+    }
+    .team-data-div h3 {
+        margin: 0 !important;
+    }
+    .player-card {
+        width: 100% !important;
+        margin-bottom: 10% !important;
+        margin-left: 2%;
+    }
+}
+@media only screen and (max-width: 599px) {
+    li {
+        width: 100% !important;
+        height: 54% !important;
+    }
 }
