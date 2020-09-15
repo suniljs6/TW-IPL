@@ -90,7 +90,7 @@ var teamNames = {
     "royal-challengers-bangalore": {
         id: "rcb",
         logo: "Royal-Challengers-Bangalore-Logo-PNG.png",
-        celebrationImage: "Royal-Challengers-Bangalore-Logo-PNG.png",
+        celebrationImage: "rcb-celebrations.jpeg",
         color: " #2B2A29",
         venue: "",
         cups : "",
@@ -109,10 +109,43 @@ async function fetchTeamData(url){
 function populateTeamData(){
     document.getElementById("loader-div").style.display = "flex";
     fetchTeamData("https://ipl-t20.herokuapp.com/teams").then(teams => {
-        teams.forEach(team => {
-            if (setDimensions()) {
-
-            } else {
+        console.log(teams);
+        if (setDimensions()) {
+            teams.forEach(team => {
+                teamNames[team.id].venue = team.venue
+                var mobileTeamDiv = document.createDocumentFragment();;
+                    var teamImageDiv = document.createElement('div');
+                    teamImageDiv.className = "team-image-div"
+                        var teamImage = document.createElement('img');
+                        teamImage.className = "team-image"
+                        teamImage.src = "images/"+teamNames[team.id].logo;
+                        teamImageDiv.appendChild(teamImage);
+                    mobileTeamDiv.appendChild(teamImageDiv);
+                    var teamDataDiv = document.createElement('div');
+                    teamDataDiv.className = "mobile-team-data-div";
+                        var teamName = document.createElement('h3');
+                        teamName.innerHTML = team.teamName;
+                        teamDataDiv.appendChild(teamName);
+                        if (team.winningYears.length) {
+                            var cups = document.createElement('div');
+                            cups.id = "cups";
+                            cups.className += "team-cups"
+                            cups.innerHTML = "<i class='fa fa-trophy' style='color:yellow'></i> &nbsp"
+                            cups.innerHTML +=  team.winningYears.join(", ");
+                            teamNames[team.id].cups = team.winningYears.join(", ");
+                            teamDataDiv.appendChild(cups);
+                        }
+                    mobileTeamDiv.appendChild(teamDataDiv);
+                    let teamData = document.getElementById("mobile-"+teamNames[team.id].id);
+                    teamData.style.backgroundColor = teamNames[team.id].color
+                    teamData.insertBefore(mobileTeamDiv,teamData.childNodes[1]);
+            });
+            document.getElementById("loader-div").style.display = "none";
+            document.getElementById("teams-div").style.display = "none";
+            document.getElementById("team-detailed-view").style.display = "none";
+            document.getElementById("mobile-div").style.display = "flex";
+        } else {
+            teams.forEach(team => {
                 var toAdd = document.createDocumentFragment();
                 var name = document.createElement('div');
                 name.id = team.id;
@@ -136,11 +169,12 @@ function populateTeamData(){
                 }
                 let teamData = document.getElementById(teamNames[team.id].id);
                 teamData.insertBefore(toAdd,teamData.childNodes[2]);
-            }
-        });
-        document.getElementById("loader-div").style.display = "none";
-        document.getElementById("teams-div").style.display = "flex";
-        document.getElementById("team-detailed-view").style.display = "none";
+            });
+            document.getElementById("loader-div").style.display = "none";
+            document.getElementById("teams-div").style.display = "flex";
+            document.getElementById("team-detailed-view").style.display = "none";
+            document.getElementById("mobile-div").style.display = "none";
+        }
     })
     
 }
@@ -171,6 +205,7 @@ function populatePlayerStats(stat,text){
 function viewTeam(team) {
     document.getElementById("loader-div").style.display = "flex";
     document.getElementById("teams-div").style.display = "none";
+    document.getElementById("mobile-div").style.display = "none";
     let teamId = getTeamID(team)
     fetchTeamData("https://ipl-t20.herokuapp.com/teams/"+teamId).then((players) => {
         console.log(players);

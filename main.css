@@ -258,6 +258,56 @@ a {
 .Wickets {
     margin-left: 30%;
 }
+.mobile-div {
+    display: none;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5%;
+}
+.mobile-team-div {
+    display: flex;
+    flex-direction: row;
+    min-height: 20%;
+    align-items: center;
+    width: 95%;
+    margin-bottom: 5%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+.team-image-div {
+    width: 20%;
+    height: 65%;
+    background: white;
+    border-radius: 50%;
+    margin-left: 1%;
+}
+.team-image {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+.mobile-team-data-div {
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    margin-left: 5%;
+    margin-bottom: 5px;
+}
+.arrow-div {
+    display: flex;
+    flex-direction: row;
+    width: 15%;
+    justify-content: center;
+    background: rgba(204, 204, 204, 0.5);
+    height: 100%;
+    align-items: center;
+}
+.arrow-div img{
+    width: 35%;
+}
 /* 
   ##Device = Tablets, Ipads (portrait)
   ##Screen = B/w 768px to 1024px
@@ -307,6 +357,13 @@ a {
     }
     .team-banner {
         height: 45% !important;
+    }
+    .mobile-team-div {
+        min-height: 40% !important;
+    }
+    .team-image-div {
+        width: 20% !important;
+        height: 80% !important; 
     }
 }
 /* 
