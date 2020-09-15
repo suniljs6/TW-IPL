@@ -21,8 +21,13 @@ const app = {
     },
     poppin: function(ev){
         if (window.location.href.length === window.location.href.search("TW-IPL/")+"TW-IPL/".length) {
-            document.getElementById("teams-div").style.display = "flex";
-            document.getElementById("team-detailed-view").style.display = "none";
+            if (setDimensions()) {
+                document.getElementById("team-detailed-view").style.display = "none";
+                document.getElementById("mobile-div").style.display = "flex";
+            } else {
+                document.getElementById("teams-div").style.display = "flex";
+                document.getElementById("team-detailed-view").style.display = "none";
+            }
         } else {
             viewTeam(app.currentPage);
         }
