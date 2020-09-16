@@ -208,7 +208,15 @@ function populatePlayerStats(stat,text){
     return stats
 }
 
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
 function viewTeam(team) {
+    const container = document.querySelector('#team-detailed-view');
+    removeAllChildNodes(container);
     document.getElementById("loader-div").style.display = "flex";
     document.getElementById("teams-div").style.display = "none";
     document.getElementById("mobile-div").style.display = "none";
