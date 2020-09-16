@@ -2,7 +2,7 @@ window.addEventListener("resize", () => {
     this.setDimensions();
 });
 function setDimensions() {
-    return ( ( window.innerWidth <= 800 ) && ( window.innerHeight <= 600 ) );
+    return ( ( window.innerWidth <= 800 ) && ( window.innerHeight <= 850 ) );
 }
 const app = {
     currentPage: "",
@@ -115,6 +115,7 @@ function populateTeamData(){
     document.getElementById("loader-div").style.display = "flex";
     fetchTeamData("https://ipl-t20.herokuapp.com/teams").then(teams => {
         console.log(teams);
+        console.log(window.innerHeight,window.innerWidth);
         if (setDimensions()) {
             teams.forEach(team => {
                 teamNames[team.id].venue = team.venue
