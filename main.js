@@ -260,13 +260,29 @@ function viewTeam(team) {
             var playerDiv = document.createElement('div');
             playerDiv.style.backgroundColor = teamNames[teamId].color;
             playerDiv.className = "player-card"
+                var playerLogo = document.createElement('div');
+                playerLogo.className = "player-logo";
                 if (isCaption(captainId,player.id)) {
                     var captain = document.createElement('h3');
                     captain.innerHTML = "captain : " + player.name;
                     teamDataDiv.appendChild(captain);
                     teamBannerDiv.appendChild(teamDataDiv);
                     teamBanner.appendChild(teamBannerDiv);
+                        var captainLogo = document.createElement('img');
+                        captainLogo.src = "images/copyright.svg"
+                        playerLogo.appendChild(captainLogo);
                 }
+                if (isWicketKeeper(wicketKeeperId,player.id)){
+                    var keeperLogo = document.createElement('img');
+                    keeperLogo.src = "images/wickets.png"
+                    playerLogo.appendChild(keeperLogo);
+                }
+                if (player.nationality !== "Indian") {
+                    var nonDesi = document.createElement('img');
+                    nonDesi.src = "images/plane.svg"
+                    playerLogo.appendChild(nonDesi);
+                }
+                playerDiv.appendChild(playerLogo);
                 var playerImg = document.createElement('img');
                 playerImg.src = player.image;
                 playerDiv.appendChild(playerImg);
