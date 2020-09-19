@@ -102,84 +102,104 @@ var teamNames = {
     }
 }
 async function fetchTeamData(url){
-    let response = await fetch("https://cors-anywhere.herokuapp.com/" +  url);
-    if (response.ok) {
-        let json = await response.json();
-        return json;
-    } else {
-       
-    }
+    let x = await fetch("https://cors-anywhere.herokuapp.com/" + url).then((response)=> {
+                console.log(response);
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw Error(response.statusText);
+                }
+            }).then((response)=> {
+                console.log(response);
+                return response;
+            }).catch((error) => {
+                console.log(error);
+            });
+   return x;
 }
 
 function populateTeamData(){
     document.getElementById("loader-div").style.display = "flex";
     fetchTeamData("https://ipl-t20.herokuapp.com/teams").then(teams => {
         console.log(teams);
-        console.log(window.innerHeight,window.innerWidth);
-        if (setDimensions()) {
-            teams.forEach(team => {
-                teamNames[team.id].venue = team.venue
-                var mobileTeamDiv = document.createDocumentFragment();;
-                    var teamImageDiv = document.createElement('div');
-                    teamImageDiv.className = "team-image-div"
-                        var teamImage = document.createElement('img');
-                        teamImage.className = "team-image"
-                        teamImage.src = "images/"+teamNames[team.id].logo;
-                        teamImageDiv.appendChild(teamImage);
-                    mobileTeamDiv.appendChild(teamImageDiv);
-                    var teamDataDiv = document.createElement('div');
-                    teamDataDiv.className = "mobile-team-data-div";
-                        var teamName = document.createElement('h3');
-                        teamName.innerHTML = team.teamName;
-                        teamDataDiv.appendChild(teamName);
-                        if (team.winningYears.length) {
-                            var cups = document.createElement('div');
-                            cups.id = "cups";
-                            cups.className += "team-cups"
-                            cups.innerHTML = "<i class='fa fa-trophy' style='color:yellow'></i> &nbsp"
-                            cups.innerHTML +=  team.winningYears.join(", ");
-                            teamNames[team.id].cups = team.winningYears.join(", ");
-                            teamDataDiv.appendChild(cups);
-                        }
-                    mobileTeamDiv.appendChild(teamDataDiv);
-                    let teamData = document.getElementById("mobile-"+teamNames[team.id].id);
-                    teamData.style.backgroundColor = teamNames[team.id].color
-                    teamData.insertBefore(mobileTeamDiv,teamData.childNodes[1]);
-            });
+        if (!teams)  {
+            console.log("ok");
+            var errorDiv = document.createElement('div');
+            errorDiv.innerHTML = "Refresh the page and try again &#128577;";
             document.getElementById("loader-div").style.display = "none";
             document.getElementById("teams-div").style.display = "none";
             document.getElementById("team-detailed-view").style.display = "none";
-            document.getElementById("mobile-div").style.display = "flex";
-        } else {
-            teams.forEach(team => {
-                var toAdd = document.createDocumentFragment();
-                var name = document.createElement('div');
-                name.id = team.id;
-                name.innerHTML = team.teamName;
-                name.className += "team-name"
-                toAdd.appendChild(name);
-                var venue = document.createElement('div');
-                venue.id = "venue";
-                venue.innerHTML = team.venue;
-                teamNames[team.id].venue = team.venue;
-                venue.className += "team-venue"
-                toAdd.appendChild(venue);
-                if (team.winningYears.length) {
-                    var cups = document.createElement('div');
-                    cups.id = "cups";
-                    cups.className += "team-cups"
-                    cups.innerHTML = "<i class='fa fa-trophy' style='color:yellow'></i> &nbsp"
-                    cups.innerHTML +=  team.winningYears.join(", ");
-                    teamNames[team.id].cups = team.winningYears.join(", ");
-                    toAdd.appendChild(cups);
-                }
-                let teamData = document.getElementById(teamNames[team.id].id);
-                teamData.insertBefore(toAdd,teamData.childNodes[2]);
-            });
-            document.getElementById("loader-div").style.display = "none";
-            document.getElementById("teams-div").style.display = "flex";
-            document.getElementById("team-detailed-view").style.display = "none";
             document.getElementById("mobile-div").style.display = "none";
+            document.getElementById("error-div").style.display = "flex";
+            document.getElementById("error-div").appendChild(errorDiv);
+        } else {
+            if (setDimensions()) {
+                teams.forEach(team => {
+                    teamNames[team.id].venue = team.venue
+                    var mobileTeamDiv = document.createDocumentFragment();;
+                        var teamImageDiv = document.createElement('div');
+                        teamImageDiv.className = "team-image-div"
+                            var teamImage = document.createElement('img');
+                            teamImage.className = "team-image"
+                            teamImage.src = "images/"+teamNames[team.id].logo;
+                            teamImageDiv.appendChild(teamImage);
+                        mobileTeamDiv.appendChild(teamImageDiv);
+                        var teamDataDiv = document.createElement('div');
+                        teamDataDiv.className = "mobile-team-data-div";
+                            var teamName = document.createElement('h3');
+                            teamName.innerHTML = team.teamName;
+                            teamDataDiv.appendChild(teamName);
+                            if (team.winningYears.length) {
+                                var cups = document.createElement('div');
+                                cups.id = "cups";
+                                cups.className += "team-cups"
+                                cups.innerHTML = "<i class='fa fa-trophy' style='color:yellow'></i> &nbsp"
+                                cups.innerHTML +=  team.winningYears.join(", ");
+                                teamNames[team.id].cups = team.winningYears.join(", ");
+                                teamDataDiv.appendChild(cups);
+                            }
+                        mobileTeamDiv.appendChild(teamDataDiv);
+                        let teamData = document.getElementById("mobile-"+teamNames[team.id].id);
+                        teamData.style.backgroundColor = teamNames[team.id].color
+                        teamData.insertBefore(mobileTeamDiv,teamData.childNodes[1]);
+                });
+                document.getElementById("loader-div").style.display = "none";
+                document.getElementById("error-div").style.display = "none";
+                document.getElementById("teams-div").style.display = "none";
+                document.getElementById("team-detailed-view").style.display = "none";
+                document.getElementById("mobile-div").style.display = "flex";
+            } else {
+                teams.forEach(team => {
+                    var toAdd = document.createDocumentFragment();
+                    var name = document.createElement('div');
+                    name.id = team.id;
+                    name.innerHTML = team.teamName;
+                    name.className += "team-name"
+                    toAdd.appendChild(name);
+                    var venue = document.createElement('div');
+                    venue.id = "venue";
+                    venue.innerHTML = team.venue;
+                    teamNames[team.id].venue = team.venue;
+                    venue.className += "team-venue"
+                    toAdd.appendChild(venue);
+                    if (team.winningYears.length) {
+                        var cups = document.createElement('div');
+                        cups.id = "cups";
+                        cups.className += "team-cups"
+                        cups.innerHTML = "<i class='fa fa-trophy' style='color:yellow'></i> &nbsp"
+                        cups.innerHTML +=  team.winningYears.join(", ");
+                        teamNames[team.id].cups = team.winningYears.join(", ");
+                        toAdd.appendChild(cups);
+                    }
+                    let teamData = document.getElementById(teamNames[team.id].id);
+                    teamData.insertBefore(toAdd,teamData.childNodes[2]);
+                });
+                document.getElementById("loader-div").style.display = "none";
+                document.getElementById("error-div").style.display = "none";
+                document.getElementById("teams-div").style.display = "flex";
+                document.getElementById("team-detailed-view").style.display = "none";
+                document.getElementById("mobile-div").style.display = "none";
+            }
         }
     })
     
@@ -222,91 +242,103 @@ function viewTeam(team) {
     document.getElementById("mobile-div").style.display = "none";
     let teamId = getTeamID(team)
     fetchTeamData("https://ipl-t20.herokuapp.com/teams/"+teamId).then((players) => {
-        console.log(players);
-        var captainId = players.team.captainId;
-        var wicketKeeperId = players.team.wicketKeeperId;
-        var toAdd = document.createDocumentFragment();
-        var teamBanner = document.createElement('div');
-        teamBanner.id = "teamBanner";
-        teamBanner.className += "team-banner"
-        const backgroundImage = "images/" + teamNames[teamId].celebrationImage;
-        teamBanner.style.backgroundImage = "url(" + backgroundImage + ")";
-        teamBanner.style.backgroundColor = teamNames[teamId].color;
-            var teamBannerDiv = document.createElement('div');
-                teamBannerDiv.className += "team-banner-div"
-                var img = document.createElement('img');
-                img.src = "images/"+teamNames[teamId].logo;
-                teamBannerDiv.appendChild(img);
-                var teamDataDiv = document.createElement('div');
-                    teamDataDiv.className += "team-data-div"
-                    var teamName = document.createElement('h3');
-                    teamName.innerHTML = teamId;
-                    teamName.style.fontSize = "2em";
-                    teamDataDiv.appendChild(teamName);
-                    if (teamNames[teamId].cups.length) {
-                        var cups = document.createElement('div');
-                        cups.innerHTML = "<i class='fa fa-trophy' style='color:black'></i> &nbsp"
-                        cups.innerHTML += teamNames[teamId].cups;
-                        cups.style.fontSize = "1em";
-                        cups.style.fontWeight = "bolder";
-                        teamDataDiv.appendChild(cups);
+        if (!players) {
+            var errorDiv = document.createElement('div');
+            errorDiv.innerHTML = "Refresh the page and try again &#128577;";
+            document.getElementById("loader-div").style.display = "none";
+            document.getElementById("teams-div").style.display = "none";
+            document.getElementById("team-detailed-view").style.display = "none";
+            document.getElementById("mobile-div").style.display = "none";
+            document.getElementById("error-div").style.display = "flex";
+            document.getElementById("error-div").appendChild(errorDiv);
+        } else {
+            console.log(players);
+            var captainId = players.team.captainId;
+            var wicketKeeperId = players.team.wicketKeeperId;
+            var toAdd = document.createDocumentFragment();
+            var teamBanner = document.createElement('div');
+            teamBanner.id = "teamBanner";
+            teamBanner.className += "team-banner"
+            const backgroundImage = "images/" + teamNames[teamId].celebrationImage;
+            teamBanner.style.backgroundImage = "url(" + backgroundImage + ")";
+            teamBanner.style.backgroundColor = teamNames[teamId].color;
+                var teamBannerDiv = document.createElement('div');
+                    teamBannerDiv.className += "team-banner-div"
+                    var img = document.createElement('img');
+                    img.src = "images/"+teamNames[teamId].logo;
+                    teamBannerDiv.appendChild(img);
+                    var teamDataDiv = document.createElement('div');
+                        teamDataDiv.className += "team-data-div"
+                        var teamName = document.createElement('h3');
+                        teamName.innerHTML = teamId;
+                        teamName.style.fontSize = "2em";
+                        teamDataDiv.appendChild(teamName);
+                        if (teamNames[teamId].cups.length) {
+                            var cups = document.createElement('div');
+                            cups.innerHTML = "<i class='fa fa-trophy' style='color:black'></i> &nbsp"
+                            cups.innerHTML += teamNames[teamId].cups;
+                            cups.style.fontSize = "1em";
+                            cups.style.fontWeight = "bolder";
+                            teamDataDiv.appendChild(cups);
+                        }
+                        var venue = document.createElement('h3');
+                        venue.innerHTML = "venue : " + teamNames[teamId].venue;
+                        teamDataDiv.appendChild(venue);
+            var playersDiv = document.createElement('div');
+            playersDiv.className = "players-div"
+            players.players.forEach((player) => {
+                var playerDiv = document.createElement('div');
+                playerDiv.style.backgroundColor = teamNames[teamId].color;
+                playerDiv.className = "player-card"
+                    var playerLogo = document.createElement('div');
+                    playerLogo.className = "player-logo";
+                    if (isCaption(captainId,player.id)) {
+                        var captain = document.createElement('h3');
+                        captain.innerHTML = "captain : " + player.name;
+                        teamDataDiv.appendChild(captain);
+                        teamBannerDiv.appendChild(teamDataDiv);
+                        teamBanner.appendChild(teamBannerDiv);
+                            var captainLogo = document.createElement('img');
+                            captainLogo.src = "images/copyright.svg"
+                            playerLogo.appendChild(captainLogo);
                     }
-                    var venue = document.createElement('h3');
-                    venue.innerHTML = "venue : " + teamNames[teamId].venue;
-                    teamDataDiv.appendChild(venue);
-        var playersDiv = document.createElement('div');
-        playersDiv.className = "players-div"
-        players.players.forEach((player) => {
-            var playerDiv = document.createElement('div');
-            playerDiv.style.backgroundColor = teamNames[teamId].color;
-            playerDiv.className = "player-card"
-                var playerLogo = document.createElement('div');
-                playerLogo.className = "player-logo";
-                if (isCaption(captainId,player.id)) {
-                    var captain = document.createElement('h3');
-                    captain.innerHTML = "captain : " + player.name;
-                    teamDataDiv.appendChild(captain);
-                    teamBannerDiv.appendChild(teamDataDiv);
-                    teamBanner.appendChild(teamBannerDiv);
-                        var captainLogo = document.createElement('img');
-                        captainLogo.src = "images/copyright.svg"
-                        playerLogo.appendChild(captainLogo);
-                }
-                if (isWicketKeeper(wicketKeeperId,player.id)){
-                    var keeperLogo = document.createElement('img');
-                    keeperLogo.src = "images/wickets.png"
-                    playerLogo.appendChild(keeperLogo);
-                }
-                if (player.nationality !== "Indian") {
-                    var nonDesi = document.createElement('img');
-                    nonDesi.src = "images/plane.svg"
-                    playerLogo.appendChild(nonDesi);
-                }
-                playerDiv.appendChild(playerLogo);
-                var playerImg = document.createElement('img');
-                playerImg.src = player.image;
-                playerDiv.appendChild(playerImg);
-                var playerName = document.createElement('div');
-                playerName.className = "player-name"
-                    const name = player.name.split(" ");
-                    var playerFirstName  = document.createElement('h2');
-                    playerFirstName.innerHTML = name[0];
-                    playerName.appendChild(playerFirstName);
-                    var playerLastName = document.createElement('h3');
-                    playerLastName.innerHTML = name[1];
-                    playerName.appendChild(playerLastName);
-                playerDiv.appendChild(playerName);
-                var playerStats = document.createElement('div');
-                playerStats.className = "player-stats";
-                    playerStats.appendChild(populatePlayerStats(player.stats.matches,"Matches"));
-                    playerStats.appendChild(populatePlayerStats(player.stats.runs,"Runs"));
-                    playerStats.appendChild(populatePlayerStats(player.stats.wickets,"Wickets"));
-                playerDiv.appendChild(playerStats);
-            playersDiv.appendChild(playerDiv);
-        });
-        document.getElementById("team-detailed-view").appendChild(teamBanner);
-        document.getElementById("team-detailed-view").appendChild(playersDiv);
-        document.getElementById("loader-div").style.display = "none";
-        document.getElementById("team-detailed-view").style.display = "flex";
+                    if (isWicketKeeper(wicketKeeperId,player.id)){
+                        var keeperLogo = document.createElement('img');
+                        keeperLogo.src = "images/wickets.png"
+                        playerLogo.appendChild(keeperLogo);
+                    }
+                    if (player.nationality !== "Indian") {
+                        var nonDesi = document.createElement('img');
+                        nonDesi.src = "images/plane.svg"
+                        playerLogo.appendChild(nonDesi);
+                    }
+                    playerDiv.appendChild(playerLogo);
+                    var playerImg = document.createElement('img');
+                    playerImg.src = player.image;
+                    playerDiv.appendChild(playerImg);
+                    var playerName = document.createElement('div');
+                    playerName.className = "player-name"
+                        const name = player.name.split(" ");
+                        var playerFirstName  = document.createElement('h2');
+                        playerFirstName.innerHTML = name[0];
+                        playerName.appendChild(playerFirstName);
+                        var playerLastName = document.createElement('h3');
+                        playerLastName.innerHTML = name[1];
+                        playerName.appendChild(playerLastName);
+                    playerDiv.appendChild(playerName);
+                    var playerStats = document.createElement('div');
+                    playerStats.className = "player-stats";
+                        playerStats.appendChild(populatePlayerStats(player.stats.matches,"Matches"));
+                        playerStats.appendChild(populatePlayerStats(player.stats.runs,"Runs"));
+                        playerStats.appendChild(populatePlayerStats(player.stats.wickets,"Wickets"));
+                    playerDiv.appendChild(playerStats);
+                playersDiv.appendChild(playerDiv);
+            });
+            document.getElementById("team-detailed-view").appendChild(teamBanner);
+            document.getElementById("team-detailed-view").appendChild(playersDiv);
+            document.getElementById("loader-div").style.display = "none";
+            document.getElementById("error-div").style.display = "none";
+            document.getElementById("team-detailed-view").style.display = "flex";
+        }
     })
 }
